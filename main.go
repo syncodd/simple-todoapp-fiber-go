@@ -1,8 +1,12 @@
 package main
 
 import (
+	"log"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/joho/godotenv"
+	"github.com/syncodd/simple-todoapp-fiber-go/config"
 	"github.com/syncodd/simple-todoapp-fiber-go/routes"
 )
 
@@ -31,9 +35,16 @@ func main() {
 	app := fiber.New()
 	app.Use(logger.New())
 
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	config.ConnectDatabase()
+
 	setupRoutes(app)
 
-	err := app.Listen(":8000")
+	err = app.Listen(":8000")
 
 	if err != nil {
 		panic(err)
